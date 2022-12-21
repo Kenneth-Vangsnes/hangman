@@ -36,7 +36,7 @@ function checkForWin() {
 }
 
 function checkForLoss() {
-  if(count >= 10) {
+  if(count >= 11) {
     newWord()
   } else {
     return count < 10 && win === true
@@ -44,9 +44,7 @@ function checkForLoss() {
 }
 
 /* To Do: 
-
   - Do some CSS magic
-
 */
 
 function displayLetters() {
@@ -80,8 +78,10 @@ function handleClick(value) {
         ? [...prevLetters]
         : [...prevLetters, value]
       })
-      solution.includes(value) ? console.log() : setCount(prevCount => prevCount + 1)
-    } else return newWord()
+      solution.includes(value) || pickedLetter.includes(value)
+      ? setCount(count) : setCount(prevCount => prevCount + 1)
+    } else 
+    return newWord()
 }
   
   function newWord() {
