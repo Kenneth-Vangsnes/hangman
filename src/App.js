@@ -1,14 +1,19 @@
 import './App.css';
 import React, {useEffect, useState} from 'react';
 import LetterKey from './LetterKey';
+import Confetti from 'react-confetti'
+import Word from './words';
 
 function App() {
   const [pickedLetter, setPickedLetter] = useState([""])
-  const [solution, setSolution] = useState(["H", "E", "L", "L", "O"])
+  const [solution, setSolution] = useState(Word)
   const [keyboard, setKeyboard] = useState(alphabet())
-  
- console.log(pickedLetter)
-useEffect(() => {  
+  const [win, setWin] = useState(checkForWin())
+  const [count, setCount] = useState(0)
+
+useEffect(() => {
+  setWin(checkForWin())
+  checkForLoss()
 }, [pickedLetter])
 
 function alphabet() {
@@ -19,11 +24,28 @@ function alphabet() {
   return array
 } 
 
+function checkForWin() {
+  const array = []
+  for(let i = 0; i < solution.length; i++) {
+    if(pickedLetter.includes(solution[i])){
+      array.push(solution[i])
+    }
+    else array.push("")
+  }
+  return array.join() === solution.join() ? true : false
+}
+
+function checkForLoss() {
+  if(count >= 10) {
+    newWord()
+  } else {
+    return count < 10 && win === true
+  }
+}
+
 /* To Do: 
-  - Map over solution to display correctly picked letters and set win condition
-  - Set up a state for a counter to use with hangman images and set loss condition
+
   - Do some CSS magic
-  - 
 
 */
 
@@ -46,23 +68,44 @@ const keyboardKey = keyboard.map(key =>
     </LetterKey>
   )
 
-function handleClick(value) {   
-    setKeyboard(prevKey => {
-      return prevKey.map(key => key.value === value 
-      ? {...key, isClicked: true}
-      : {...key})
-    })    
-    setPickedLetter(prevLetters => {
-      return prevLetters.includes(value) ? [...prevLetters] : [...prevLetters, value]        
-    })
-    
+function handleClick(value) {
+    if(win === false) {
+      setKeyboard(prevKey => {
+        return prevKey.map(key => key.value === value 
+        ? {...key, isClicked: true}
+        : {...key})
+      })    
+      setPickedLetter(prevLetters => {
+        return prevLetters.includes(value)
+        ? [...prevLetters]
+        : [...prevLetters, value]
+      })
+      solution.includes(value) ? console.log() : setCount(prevCount => prevCount + 1)
+    } else return newWord()
 }
+  
+  function newWord() {
+    setSolution(Word())
+    setCount(0)
+    setPickedLetter([""])
+    setKeyboard(alphabet())
+  }
 
   return (
     <main>
       <h2 className='container'>
-        <h3 className='letter'>{displayLetters()}</h3>
+        <h3 className='word'>{displayLetters()}</h3>
         <h3 className='keyboard-container'>{keyboardKey}</h3>
+        <h3>{win && <Confetti />}</h3>
+        <img 
+        src={process.env.PUBLIC_URL + `/Hangman/Hangman - ${count}.png`} 
+        alt="logo"
+        className='hangman'
+        />
+        <button 
+          className='button'
+          onClick={newWord}
+        >New Word</button>
       </h2>
     </main>
   );
