@@ -1,8 +1,8 @@
-import './App.css';
-import React, {useEffect, useState} from 'react';
-import LetterKey from './LetterKey';
-import Confetti from 'react-confetti'
-import Word from './words';
+import "./App.css"
+import React, { useEffect, useState } from "react"
+import LetterKey from "./LetterKey"
+import Confetti from "react-confetti"
+import Word from "./words"
 
 function App() {
   const [pickedLetter, setPickedLetter] = useState([""])
@@ -11,79 +11,83 @@ function App() {
   const [win, setWin] = useState(checkForWin())
   const [count, setCount] = useState(0)
 
-useEffect(() => {
-  setWin(checkForWin())
-  checkForLoss()
-}, [pickedLetter])
+  useEffect(() => {
+    setWin(checkForWin())
+    checkForLoss()
+  }, [pickedLetter])
 
-function alphabet() {
-  const array = []
-  const alpha = Array.from(Array(26)).map((e, i) => i + 65)
-  const alphabet = alpha.map((x) => String.fromCharCode(x))
-  alphabet.map(ele => array.push({value: ele, isClicked: false}))
-  return array
-} 
+  function alphabet() {
+    const array = []
+    const alpha = Array.from(Array(26)).map((e, i) => i + 65)
+    const alphabet = alpha.map((x) => String.fromCharCode(x))
+    alphabet.map((ele) => array.push({ value: ele, isClicked: false }))
+    return array
+  }
 
-function checkForWin() {
-  const array = []
-  for(let i = 0; i < solution.length; i++) {
-    if(pickedLetter.includes(solution[i])){
-      array.push(solution[i])
+  function checkForWin() {
+    const array = []
+    for (let i = 0; i < solution.length; i++) {
+      if (pickedLetter.includes(solution[i])) {
+        array.push(solution[i])
+      } else array.push("")
     }
-    else array.push("")
+    return array.join() === solution.join() ? true : false
   }
-  return array.join() === solution.join() ? true : false
-}
 
-function checkForLoss() {
-  if(count >= 11) {
-    newWord()
-  } else {
-    return count < 10 && win === true
+  function checkForLoss() {
+    if (count >= 11) {
+      newWord()
+    } else {
+      return count < 10 && win === true
+    }
   }
-}
 
-/* To Do: 
+  /* To Do: 
   - Do some CSS magic
 */
 
-function displayLetters() {
-  const array = []
-  for(let i = 0; i < solution.length; i++) {
-    pickedLetter.includes(solution[i]) ? array.push(solution[i]) : array.push(" ")
-  } 
-  return array.map(ele => <span className='test'>{ele === " " ? "-" : ele }</span>)
-}
+  function displayLetters() {
+    const array = []
+    for (let i = 0; i < solution.length; i++) {
+      pickedLetter.includes(solution[i])
+        ? array.push(solution[i])
+        : array.push(" ")
+    }
+    return array.map((ele, index) => (
+      <span key={ele + index} className="test">
+        {ele === " " ? "-" : ele}
+      </span>
+    ))
+  }
 
-const keyboardKey = keyboard.map(key => 
+  const keyboardKey = keyboard.map((key) => (
     <LetterKey
       className="keyboard"
       isClicked={key.isClicked}
       key={key.value}
-      onClick={handleClick}
-    >
+      onClick={handleClick}>
       {key.value}
     </LetterKey>
-  )
+  ))
 
-function handleClick(value) {
-    if(win === false) {
-      setKeyboard(prevKey => {
-        return prevKey.map(key => key.value === value 
-        ? {...key, isClicked: true}
-        : {...key})
-      })    
-      setPickedLetter(prevLetters => {
+  function handleClick(value) {
+    if (win === false) {
+      setKeyboard((prevKey) => {
+        return prevKey.map((key) =>
+          key.value === value ? { ...key, isClicked: true } : { ...key }
+        )
+      })
+      setPickedLetter((prevLetters) => {
         return prevLetters.includes(value)
-        ? [...prevLetters]
-        : [...prevLetters, value]
+          ? [...prevLetters]
+          : [...prevLetters, value]
       })
       solution.includes(value) || pickedLetter.includes(value)
-      ? setCount(count) : setCount(prevCount => prevCount + 1)
-    } else 
-    return newWord()
-}
-  
+        ? setCount(count)
+        : setCount((prevCount) => prevCount + 1)
+    } else return newWord()
+  }
+
   function newWord() {
     setSolution(Word())
     setCount(0)
@@ -93,22 +97,21 @@ function handleClick(value) {
 
   return (
     <main>
-      <h2 className='container'>
-        <h3 className='word'>{displayLetters()}</h3>
-        <h3 className='keyboard-container'>{keyboardKey}</h3>
-        <h3>{win && <Confetti />}</h3>
-        <img 
-        src={process.env.PUBLIC_URL + `/Hangman/Hangman - ${count}.png`} 
-        alt="logo"
-        className='hangman'
+      <div className="container">
+        <img
+          src={process.env.PUBLIC_URL + `/Hangman/Hangman - ${count}.png`}
+          alt="logo"
+          className="hangman"
         />
-        <button 
-          className='button'
-          onClick={newWord}
-        >New Word</button>
-      </h2>
+        <div className="word">{displayLetters()}</div>
+        <div className="keyboard-container">{keyboardKey}</div>
+        <div>{win && <Confetti />}</div>
+        <button className="button" onClick={newWord}>
+          New Word
+        </button>
+      </div>
     </main>
-  );
+  )
 }
 
-export default App;
+export default App
