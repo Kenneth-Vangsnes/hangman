@@ -1,3 +1,8 @@
+html {
+  display: flex;
+  justify-content: centers;
+}
+
 main {
   max-width: 800px;
   display: flex;
