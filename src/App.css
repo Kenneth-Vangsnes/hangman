@@ -74,3 +74,14 @@ main {
 .button:hover {
   cursor: pointer;
 }
+
+.modal-container {
+  background-color: rgba(128, 128, 128);
+  height: 250px;
+  width: 300px;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 16px;
+}

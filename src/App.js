@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react"
 import LetterKey from "./LetterKey"
 import Confetti from "react-confetti"
 import Word from "./words"
+import Modal from "./Modal"
 
 function App() {
   const [pickedLetter, setPickedLetter] = useState([""])
@@ -10,6 +11,7 @@ function App() {
   const [keyboard, setKeyboard] = useState(alphabet())
   const [win, setWin] = useState(checkForWin())
   const [count, setCount] = useState(0)
+  const [showModal, setShowModal] = useState(false)
 
   useEffect(() => {
     setWin(checkForWin())
@@ -44,6 +46,8 @@ function App() {
 
   /* To Do: 
   - Do some CSS magic
+  - Modal with win or lose. 
+  - Start new game button.
 */
 
   function displayLetters() {
@@ -98,6 +102,7 @@ function App() {
   return (
     <main>
       <div className="container">
+        {win === undefined && <Modal result={win} />}
         <img
           src={process.env.PUBLIC_URL + `/Hangman/Hangman - ${count}.png`}
           alt="logo"
