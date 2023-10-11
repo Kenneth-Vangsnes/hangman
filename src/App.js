@@ -3,20 +3,33 @@ import React, { useEffect, useState } from "react"
 import LetterKey from "./LetterKey"
 import Confetti from "react-confetti"
 import Word from "./words"
-import Modal from "./Modal"
+import Modal from "./components/Modal/Modal"
+import Options from "./components/Modal/Options/Options"
 
 function App() {
-  const [pickedLetter, setPickedLetter] = useState([""])
+  const [pickedLetter, setPickedLetter] = useState([])
   const [solution, setSolution] = useState(Word)
   const [keyboard, setKeyboard] = useState(alphabet())
   const [win, setWin] = useState(checkForWin())
   const [count, setCount] = useState(0)
   const [showModal, setShowModal] = useState(false)
+  const [easyMode, setEasyMode] = useState(false)
+  const [showOptions, setShowOptions] = useState(false)
+
+  //console.log(pickedLetter.length)
 
   useEffect(() => {
     setWin(checkForWin())
     checkForLoss()
   }, [pickedLetter])
+
+  const setMode = () => {
+    if (easyMode === true) {
+      setCount(0)
+    } else {
+      setCount(4)
+    }
+  }
 
   function alphabet() {
     const array = []
@@ -38,9 +51,10 @@ function App() {
 
   function checkForLoss() {
     if (count >= 11) {
-      newWord()
+      setShowModal(true)
+      //newWord()
     } else {
-      return count < 10 && win === true
+      return count < 10 && win === true && setShowModal(true)
     }
   }
 
@@ -95,14 +109,28 @@ function App() {
   function newWord() {
     setSolution(Word())
     setCount(0)
-    setPickedLetter([""])
+    setPickedLetter([])
     setKeyboard(alphabet())
+    setShowModal(false)
   }
 
   return (
     <main>
       <div className="container">
-        {win === undefined && <Modal result={win} />}
+        <div
+          className="app-options"
+          onClick={() => setShowOptions(!showOptions)}>
+          Options
+        </div>
+        {showOptions && (
+          <Options
+            easyMode={easyMode}
+            setEasyMode={setEasyMode}
+            setMode={setMode}
+            pickedLetter={pickedLetter}
+          />
+        )}
+        {showModal && <Modal result={win} newWord={newWord} />}
         <img
           src={process.env.PUBLIC_URL + `/Hangman/Hangman - ${count}.png`}
           alt="logo"

@@ -1,0 +1,16 @@
+.options-container {
+  background-color: orange;
+  position: absolute;
+  top: 0;
+  left: 0px;
+  height: 100vh;
+  width: 200px;
+  display: flex;
+  justify-content: center;
+  padding-top: 40px;
+}
+
+.options-mode {
+  width: 70px;
+  height: 40px;
+}

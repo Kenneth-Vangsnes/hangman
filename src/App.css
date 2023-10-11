@@ -75,13 +75,13 @@ main {
   cursor: pointer;
 }
 
-.modal-container {
-  background-color: rgba(128, 128, 128);
-  height: 250px;
-  width: 300px;
-  position: absolute;
+.app-options {
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 16px;
+  width: 100px;
+  height: 40px;
+  background-color: rgba(125, 122, 122, 0.5);
+  cursor: pointer;
 }
